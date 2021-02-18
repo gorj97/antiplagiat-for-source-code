@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+       select.form-control{
+            width: 48%;
+            display: inline-block;
+       }
+       .parent_div{
+       }
+       .div_selects {
+            width: 18%;
+            margin-left: 15px;
+            vertical-align: top;
+            display: inline-block;
+       }
+       .div_main {
+            width: 77%;
+            vertical-align: top;
+            display: inline-block;
+       }
+       .div_left{
+            width:49%;
+            vertical-align: top;
+            display:inline-block;
+       }
+       .div_right{
+            width:49%;
+            vertical-align: top;
+            display:inline-block;
+       }
+       .div_info{
+            vertical-align: top;
+            width: 90%;
+       }
+       .tabs {
+        position: relative; /* Относительное позиционирование */
+       }
+       .tab, .tab-title {
+        display: inline-block; /* Выстраиваем по горизонтали */
+       }
+       .tab input[type="radio"] { display: none; }
+       .tab-title {
+        background: #0d6efd; /* Цвет фона */
+        padding: 5px 10px; /* Поля вокруг текста */
+        border: 1px solid #666; /* Параметры рамки */
+        border-bottom: none; /* Снизу линию убираем */
+       }
+       .tab-content {
+        position: absolute; /* Абсолютное позиционирование */
+        border: 1px solid #666; /* Параметры рамки */
+        padding: 10px; /* Поля вокруг текста */
+        top: 34px;
+        left: 0; /* Размещаем у левого края */
+        width: calc(100% - 20px); /* Ширина содержимого */
+        display: none; /* Прячем вкладку */
+       }
+       .tab :checked + .tab-title {
+        position: relative; /* Относительное позиционирование */
+        background: #fff; /* Цвет фона */
+        top: 1px; /* Сдвигаем вниз */
+        z-index: 1; /* Отображаем поверх содержимого */
+       }
+       .tab :checked ~ .tab-content {
+        display: block; /* Показываем активную вкладку */
+       }
+    </style>
+{% endblock %}
+
+{% block title %}
+Страница исследования
+{% endblock %}
+
+{% block body %}
+
+<form action="{{url_for('research_files')}}" method="POST" enctype="multipart/form-data">
+    <div class="parent_div">
+        <div class="div_selects">
+            <select size="20" name="file_left" class="form-control">
+                {% for file in files: %}
+                    {% if highlights.left[loop.index0]: %}
+                        <option selected>{{file}}</option>
+                    {% else: %}
+                        <option>{{file}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <select size="20" name="files_right" class="form-control" multiple>
+                {% for file in files: %}
+                    {% if highlights.right[loop.index0]: %}
+                        <option selected>{{file}}</option>
+                    {% else: %}
+                        <option>{{file}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br>
+            <p align="center">
+                <input type="submit" name="button" value="Исследовать" class="btn btn-primary">
+            </p>
+        </div>
+        <div class="div_main">
+            <div class="tabs">
+                <div class="tab">
+                    <input type="radio" id="tab1" name="tab-group" checked>
+                    <label for="tab1" class="tab-title">Полный вывод</label>
+                    <section class="tab-content">
+                        <div class="div_left">
+                            {% if out.result_full %}
+                                {% if out.result_full.result_left %}
+                                        {% for element in out.result_full.result_left %}
+                                            {% if element.before or element.text or element.after %}
+                                                {{element.before|safe}}{{ element.text[0] }}{{ element.after|safe }}<br>
+                                            {% else: %}
+                                                {{element}}<br>
+                                            {% endif %}
+                                        {% endfor %}
+                                {% else: %}
+                                    <div>{{out}}</div>
+                                {% endif %}
+                            {% else: %}
+                                    <div>{{out}}</div>
+                            {% endif %}
+                        </div>
+                        <div class="div_right">
+                            {% if out.result_full %}
+                                {% if out.result_full.result_right %}
+                                        {% for element in out.result_full.result_right %}
+                                            {{element.before|safe}}
+                                            {% if not element.text[1] %}
+                                                {{ element.text[0] }}
+                                            {% else %}
+                                                {% for line in element.text %}
+                                                    {{ line }}<br>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ element.after|safe }}<br>
+                                        {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+                <div class="tab">
+                    <input type="radio" id="tab2" name="tab-group">
+                    <label for="tab2" class="tab-title">Краткий вывод</label>
+                    <section class="tab-content">
+                        <div class="div_left">
+                            {% if out.result_brief %}
+                                {% if out.result_brief.result_left %}
+                                        {% for element in out.result_brief.result_left %}
+                                            {{element.before|safe}}
+                                            {% if not element.text[1] %}
+                                                {{ element.text[0] }}
+                                            {% else %}
+                                                {% for line in element.text %}
+                                                    {{ line }}<br>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ element.after|safe }}<br>
+                                        {% endfor %}
+                                {% else: %}
+                                    {% if out.result_full.percent == 0 %}
+                                        Ничего не найдено
+                                    {% else %}
+                                        <div>{{out}}</div>
+                                    {% endif %}
+                                {% endif %}
+                            {% else: %}
+                                    <div>{{out}}</div>
+                            {% endif %}
+                        </div>
+                        <div class="div_right">
+                            {% if out.result_brief %}
+                                {% if out.result_brief.result_right %}
+                                        {% for element in out.result_brief.result_right %}
+                                            {{element.before|safe}}
+                                            {% if not element.text[1] %}
+                                                {{ element.text[0] }}
+                                            {% else %}
+                                                {% for line in element.text %}
+                                                    {{ line }}<br>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ element.after|safe }}<br>
+                                        {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+                <div class="tab">
+                    <input type="radio" id="tab3" name="tab-group">
+                    <label for="tab3" class="tab-title">Информация</label>
+                    <section class="tab-content">
+                        <div class="div_info">
+                            {% if out.result_full %}
+                                {% if out.result_full.info %}
+                                    {% for element in out.result_full.info %}
+                                        {{element|safe}}<br>
+                                    {% endfor %}
+                                {% else %}
+                                    {{ out }}
+                                {% endif %}
+                            {% else %}
+                                {{ out }}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+                <div class="tab">
+                    <input type="radio" id="tab4" name="tab-group" disabled>
+                    <label for="tab4">
+                        <strong>Процент плагиата:
+                            {% if out.result_full: %}
+                                {% if out.result_full.percent: %}
+                                    {{ out.result_full.percent }}
+                                {% else: %}
+                                    0
+                                {% endif %}
+                            {% else: %}
+                                0
+                            {% endif %}
+                        </strong>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

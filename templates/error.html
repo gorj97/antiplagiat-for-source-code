@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+       .div_error{
+            margin-left: 15px;
+       }
+    </style>
+{% endblock %}
+
+{% block title %}
+Ошибка
+{% endblock %}
+
+{% block body %}
+<div class="div_error">
+    <font color="red">Что-то пошло не так. Возможные причины: <br> - Ваша сессия закончилась</font>
+    <br><a href="/" class="btn btn-primary">На главную страницу</a>
+</div>
+{% endblock %}

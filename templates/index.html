@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+       div.container{
+            vertical-align: middle;
+       }
+       .div_control_files {
+            width:33%;
+            vertical-align: top;
+            display:inline-block;
+       }
+       .div_files {
+            width:33%;
+            vertical-align: top;
+            display:inline-block;
+       }
+       .div_go_to_research{
+            width:33%;
+            vertical-align: top;
+            display:inline-block;
+       }
+    </style>
+{% endblock %}
+
+{% block title %}
+Главная страница
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="div_control_files">
+        <form id="control_files" action="{{url_for('upload_or_delete_files')}}" method="POST" enctype="multipart/form-data">
+                <p align="center">
+                    <strong>Управление файлами</strong>
+                    <input type="file" name="files[]" class="form-control" multiple width="20px">
+                </p>
+                <p align="center">
+                    <input type="submit" name="button" value="Загрузить" class="btn btn-primary">
+                    <input type="submit" name="button" value="Удалить выбранные" class="btn btn-primary">
+                </p>
+                <p align="center">
+                    <input type="submit" name="button" value="Удалить все" class="btn btn-primary">
+                </p>
+        </form>
+    </div>
+    <div class="div_files">
+        <p align="center">
+            <strong>Загруженные файлы:</strong><br>
+            {% if files: %}
+                <select size="15" name="files" class="form-control" form="control_files" multiple>
+                    {% for element in files: %}
+                        <option>{{element}}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </p>
+    </div>
+    <div class="div_go_to_research">
+        <form action="{{url_for('goto_research')}}" method="POST" enctype="multipart/form-data" id="research">
+            <br><p align="center">
+                <input type="submit" value="Перейти к исследованию" class="btn btn-primary">
+            </p>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
