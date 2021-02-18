@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from functions import *
 
 def pycode_similar_cosmetic(file_left, files_right, path, return_list, type_view):
