@@ -5,15 +5,25 @@ from functions import *
 
 def sim_run(file_left, files_right, path, extension):
     sim_name = get_sim_name(extension)
-    sim_return = ''
+    # sim_return = ''
+    result = {
+        'sim_return': '',
+        'info': []
+    }
     args_program_and_first_file = sim_name + ' ' + path + '/' + file_left + ' '
     for file in files_right:
         args = args_program_and_first_file + path + '/' + file
-        sim_return += str(subprocess.check_output(args)) + '\\r\\n\\r\\n'
-    return sim_return
+        sim_return = str(subprocess.check_output(args))
+        result['sim_return'] += sim_return
+        info_about_research = sim_return.split('\\r\\n').pop(0).replace("b'", '').replace('b"', '').replace(path + '/', '')
+        result['info'].append(info_about_research)
+        info_about_research = sim_return.split('\\r\\n').pop(1).replace(path + '/', '')
+        result['info'].append(info_about_research)
+        result['info'].append('')
+    return result
 
 
-def sim_cosmetic(sim_return, path, file_left, files_right, type_view):
+def sim_cosmetic(list_reserch, path, file_left, files_right, type_view):
 
     mass_colors = ['red', 'fuchsia', 'green', 'blue', 'yellow', 'lime', 'maroon',
                    'aqua', 'navy', 'purple', 'teal', 'olive', 'silver', 'black']
@@ -21,16 +31,19 @@ def sim_cosmetic(sim_return, path, file_left, files_right, type_view):
     result_left = []
     result_right = []
     clone_percent = 0
+    info_about_research = []
     prev_filename = None
     prev_clone_lines_left = None
     prev_clone_lines_right = None
     list_prev_clone_lines_left = []
     list_prev_clone_lines_right = []
+    sim_return = list_reserch['sim_return']
+    info_about_research = list_reserch['info'].copy()
     # Убираем путь до файла
     return_list = str(sim_return).replace(path + "/", "")
     # Получаем список обзацев
     return_list = str(return_list).split("\\r\\n\\r\\n")
-    info_about_research = str(return_list.pop(0).replace('b"', '')).split("\\r\\n")
+    # info_about_research = str(return_list.pop(0).replace('b"', '')).split("\\r\\n")
     return_list = delete_excess_paragraphs(file_left, return_list)
     return_list = sort_paragraphs_by_lines(return_list)
 
