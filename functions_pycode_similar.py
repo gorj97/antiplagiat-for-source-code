@@ -12,7 +12,7 @@ def pycode_similar_cosmetic(file_left, files_right, path, return_list, type_view
     i = -1
     mass_colors = ['red', 'fuchsia', 'green', 'blue', 'yellow', 'lime', 'maroon',
                    'aqua', 'navy', 'purple', 'teal', 'olive', 'silver', 'black']
-    hfile_left = open(path + "\\" + file_left, 'r')
+    hfile_left = open(path + "/" + file_left, 'r')
     file_left_data = hfile_left.readlines()
     file_left_functions = get_functions_from_python_file(file_left_data)
     file_left_data = line_numbering(file_left_data)
@@ -30,7 +30,7 @@ def pycode_similar_cosmetic(file_left, files_right, path, return_list, type_view
         list_paragraphs.append(paragraph)
     for element, file in zip(list_paragraphs, files_right):
         if element[0].find("error: can not find functions") == -1:
-            hfile = open(path + "\\" + file, 'r')
+            hfile = open(path + '/' + file, 'r')
             file_functions = get_functions_from_python_file(hfile.readlines())
             # Попаем строку с именем левого файла
             element.pop(0)
@@ -129,7 +129,7 @@ def pycode_similar_cosmetic(file_left, files_right, path, return_list, type_view
 
 def pycode_similar_run(file_left, files_right, path):
     result = []
-    args_program_and_first_file = 'python pycode_similar\\pycode_similar.py -p 0.1 ' + path + '/' + file_left + ' '
+    args_program_and_first_file = 'python pycode_similar/pycode_similar.py -p 0.1 ' + path + '/' + file_left + ' '
     for file in files_right:
         args = args_program_and_first_file + path + '/' + file
         try:

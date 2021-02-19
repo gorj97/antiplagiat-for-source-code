@@ -10,6 +10,8 @@ import random
 from cyrtranslit import to_latin
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
+app.secret_key = urandom(24)
 
 
 @app.route("/")
@@ -45,7 +47,6 @@ def upload_or_delete_files():
             for file in files:
                 file.filename = to_latin(file.filename, 'ru')
                 file.filename = '.'.join([file.filename.split('.')[0], file.filename.split('.')[-1].lower()])
-                print(file)
                 if not check_extension(file.filename):
                     session['error'] = 'Один из файлов имеет неразрешенное расширение'
                     return redirect('/')
@@ -57,12 +58,12 @@ def upload_or_delete_files():
             if session['path']:
                 files = listdir(session['path'])
                 for file in files:
-                    remove(session['path'] + '\\' + file)
+                    remove(session['path'] + '/' + file)
             return redirect('/')
         elif request.form['button'] == "Удалить выбранные":
             files = request.form.getlist("files")
             for file in files:
-                remove(session['path'] + '\\' + file)
+                remove(session['path'] + '/' + file)
             return redirect('/')
         else:
             return redirect("error.html")
@@ -143,6 +144,4 @@ def error():
 
 
 if __name__ == "__main__":
-    app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
-    app.secret_key = urandom(24)
     app.run(debug=True)

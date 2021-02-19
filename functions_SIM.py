@@ -87,8 +87,8 @@ def sim_cosmetic(sim_return, path, file_left, files_right, type_view):
     else:
         if len(files_right) == 1:
             file_right = files_right[0]
-            hfile_left = open(path + "\\" + file_left, 'r')
-            hfile_right = open(path + "\\" + file_right, 'r')
+            hfile_left = open(path + "/" + file_left, 'r')
+            hfile_right = open(path + "/" + file_right, 'r')
             file_left_data = hfile_left.readlines()
             file_left_data = line_numbering(file_left_data)
             file_left_data = get_lists_lines(file_left_data)
@@ -132,7 +132,7 @@ def sim_cosmetic(sim_return, path, file_left, files_right, type_view):
         # ------------------------------- Полный вывод исследования 1 с многими -------------------------------
 
         else:
-            hfile_left = open(path + "\\" + file_left, 'r')
+            hfile_left = open(path + "/" + file_left, 'r')
             file_left_data = line_numbering(hfile_left.readlines())
             file_left_data = get_lists_lines(file_left_data)
             file_right_data = []
